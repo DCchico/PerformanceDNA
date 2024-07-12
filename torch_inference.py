@@ -5,8 +5,9 @@ import time
 import os
 
 flag_inspect = False
-flag_cudnn = False
+flag_cudnn = True
 flag_profile = os.getenv('PROFILE_MEASURE', '0') == '1'
+profiling_sections = os.getenv('PROFILE_SECTIONS', 'default')
 
 if flag_inspect:
     print(torch.__version__)
@@ -51,11 +52,29 @@ if not flag_profile:
     avg_time = sum(times) / len(times)
     print(f"Average inference time: {avg_time * 1000:.2f} ms")
     print("Starting Profiling...")
+
+    # Construct Nsight Compute command
+    output_file = f"ncu_alexnet_{profiling_sections}"
+    ncu_command = f'PROFILE_MEASURE=1 ncu --target-processes all -o {output_file}'
+
+    if profiling_sections == 'default':
+        ncu_command += ' python3 torch_inference.py'
+    elif profiling_sections == 'compute':
+        ncu_command += ' --section ComputeWorkloadAnalysis python3 torch_inference.py'
+    elif profiling_sections == 'memory':
+        ncu_command += ' --section MemoryWorkloadAnalysis --section MemoryWorkloadAnalysis_Chart python3 torch_inference.py'
+    elif profiling_sections == 'scheduler':
+        ncu_command += ' --section SchedulerStats --section WarpStateStats python3 torch_inference.py'
+    elif profiling_sections == 'roofline':
+        ncu_command += ' --section SpeedOfLight_RooflineChart python3 torch_inference.py'
+    else:
+        print(f"Unknown profiling section: {profiling_sections}")
+        exit(1)
+
     # Re-run the script with profiling enabled
-    os.system('PROFILE_MEASURE=1 ncu --target-processes all -o ncu_alexnet_no_cudnn python3 torch_inference.py')
+    os.system(ncu_command)
 else:
-    print("Running profiling iterations...")
+    print("Running profiling iteration...")
     with torch.no_grad():
         output = model(input_tensor)
     print("Profiling completed.")
-
