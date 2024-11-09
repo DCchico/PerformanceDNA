@@ -5,7 +5,7 @@ import time
 import os
 
 flag_inspect = False
-flag_cudnn = False
+flag_cudnn = True
 flag_profile = os.getenv('PROFILE_MEASURE', '0') == '1'
 profiling_sections = os.getenv('PROFILE_SECTIONS', 'default')
 
