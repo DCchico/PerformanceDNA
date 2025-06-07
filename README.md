@@ -1,5 +1,15 @@
 # PerformanceDNA Benchmark and Analysis
 
+
+This repository supports the research project on **PerformanceDNA**, which aims to uncover how specific characteristics of deep learning (DL) models influence the effectiveness of graph-based compilation strategies. The benchmark suite and analysis tools provided here help identify when and why certain models underperform with specific compilation configurations, such as eager execution, TorchDynamo, or trace-based graph instantiation.
+
+The repo includes scripts for:
+- Running inference latency benchmarks across multiple compilation setups
+- Profiling hardware behavior using NVIDIA Nsight Compute
+- Analyzing performance bottlenecks tied to model structure ("model DNA") (TODO)
+
+Use the steps below to set up your environment and start benchmarking.
+
 ## 0. Find Server CUDA and cuDNN Version
 
 To find the CUDA and cuDNN versions on your server, use the following commands:
