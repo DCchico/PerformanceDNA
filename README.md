@@ -1,4 +1,4 @@
-# Profiling PerformanceDNA
+# PerformanceDNA Benchmark and Analysis
 
 ## 0. Find Server CUDA and cuDNN Version
 
@@ -16,15 +16,18 @@ python3 -c "import torch; print(torch.backends.cudnn.version())"
 ```sh
 docker pull nvcr.io/nvidia/pytorch:22.10-py3
 ```
+
 ### 2. Run Container with Mounted Directory
 ```sh
 docker run --gpus all -it --rm --shm-size=16g -v <Path-to-local-workspace>:/workspace nvcr.io/nvidia/pytorch:22.10-py3
 ```
-### 4. Benchmark Latency
+
+### 3. Benchmark Latency
 ```sh
 python3 latency_benchmark/<script_name>
 ```
-### 4. Profiling with Nsight Compute to Get Hardware Metrics For Analysis
+
+### 4. (Optional) Profiling with Nsight Compute to Get Hardware Metrics For Analysis
 ```sh
 python3 torch_inference.py
 PROFILE_SECTIONS=compute python3 torch_inference.py
