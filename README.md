@@ -1,8 +1,6 @@
-# ProfilingDNAResutls
+# Profiling PerformanceDNA
 
-## Profiling PyTorch Models with Nsight Compute in Docker
-
-### 0. Find Server CUDA and cuDNN Version
+## 0. Find Server CUDA and cuDNN Version
 
 To find the CUDA and cuDNN versions on your server, use the following commands:
 
@@ -12,16 +10,21 @@ nvidia-smi
 python3 -c "import torch; print(torch.backends.cudnn.version())"
 ```
 
-### 1. Pull 22.10 PyTorch Container from NVIDIA NGC
+### Profiling Models in PyTorch Docker for Inference Latency (with Nsight Compute for Detailed Metrics)
+
+#### 1. Pull Compatible PyTorch Container [See Compatibility Matrix](https://docs.nvidia.com/deeplearning/frameworks/support-matrix/index.html) from NVIDIA NGC. For example:
 ```sh
 docker pull nvcr.io/nvidia/pytorch:22.10-py3
 ```
-
 ### 2. Run Container with Mounted Directory
 ```sh
-docker run --gpus all -it --rm --shm-size=16g -v ~/difei/profiler/ncu:/workspace nvcr.io/nvidia/pytorch:22.10-py3
+docker run --gpus all -it --rm --shm-size=16g -v <Path-to-local-workspace>:/workspace nvcr.io/nvidia/pytorch:22.10-py3
 ```
-### 3. Profiling with Nsight Compute
+### 4. Benchmark Latency
+```sh
+python3 latency_benchmark/<script_name>
+```
+### 4. Profiling with Nsight Compute to Get Hardware Metrics For Analysis
 ```sh
 python3 torch_inference.py
 PROFILE_SECTIONS=compute python3 torch_inference.py
@@ -30,7 +33,7 @@ PROFILE_SECTIONS=scheduler python3 torch_inference.py
 PROFILE_SECTIONS=roofline python3 torch_inference.py
 ```
 
-### Additional Steps
+### Optional Steps for Visualizing Nsight Compute Results
 Custom Output File Names:
 File names needs to be adjusted when changing flags in torch_inference.py
 
