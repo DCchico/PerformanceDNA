@@ -1,54 +1,91 @@
 # PerformanceDNA Benchmark and Analysis
 
-
 This repository supports the research project on **PerformanceDNA**, which aims to uncover how specific characteristics of deep learning (DL) models influence the effectiveness of graph-based compilation strategies. The benchmark suite and analysis tools provided here help identify when and why certain models underperform with specific compilation configurations, such as eager execution, TorchDynamo, or trace-based graph instantiation.
 
 The repo includes scripts for:
-- Running inference latency benchmarks across multiple compilation setups
-- Profiling hardware behavior using NVIDIA Nsight Compute
+- Verifying the execution environment and its capabilities.
+- Running inference latency benchmarks across multiple compilation setups.
+- Extracting and inspecting `torch.compile` (Dynamo) FX graphs.
+- Profiling hardware behavior using NVIDIA Nsight Compute.
 - Analyzing performance bottlenecks tied to model structure ("model DNA") (TODO)
 
 Use the steps below to set up your environment and start benchmarking.
 
-## 0. Find Server CUDA and cuDNN Version
+## Environment Setup
 
-To find the CUDA and cuDNN versions on your server, use the following commands:
+You can run the benchmarks using either a pre-configured Docker container or a manually configured bare-metal environment.
 
+### Option 1: Docker Container (Recommended for Quick Start)
+
+This method uses a container with all system dependencies pre-installed.
+
+#### 1. Find Host CUDA Version
+First, check the NVIDIA driver version on the host machine to choose a compatible container.
 ```sh
-nvcc --version
 nvidia-smi
-python3 -c "import torch; print(torch.backends.cudnn.version())"
 ```
 
-### Profiling Models in PyTorch Docker for Inference Latency (with Nsight Compute for Detailed Metrics)
-
-#### 1. Pull Compatible PyTorch Container [See Compatibility Matrix](https://docs.nvidia.com/deeplearning/frameworks/support-matrix/index.html) from NVIDIA NGC. For example:
+#### 2. Pull Compatible PyTorch Container
+Find a compatible PyTorch container from the [NVIDIA NGC Catalog](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch) based on your driver version. For example:
 ```sh
-docker pull nvcr.io/nvidia/pytorch:22.10-py3
+docker pull nvcr.io/nvidia/pytorch:24.05-py3
 ```
 
-### 2. Run Container with Mounted Directory
+#### 3. Run Container with Mounted Directory
 ```sh
-docker run --gpus all -it --rm --shm-size=16g -v <Path-to-local-workspace>:/workspace nvcr.io/nvidia/pytorch:22.10-py3
+docker run --gpus all -it --rm --shm-size=16g -v .:/workspace nvcr.io/nvidia/pytorch:24.05-py3
 ```
 
-### 3. Benchmark Latency
+### Option 2: Bare-Metal Setup (For Custom Environments)
+
+This method provides more control. It involves creating a local Python virtual environment. For quick reproduction, please contact repository maintainer to request for scheduling server access with this setup.
+
+**Note:** This setup requires a specific Python version with development headers. 
+
+#### 1. Activate the Virtual Environment
+A Python 3.10+ virtual environment named `pytorch_env_310` is available in the project home. Activate it using:
 ```sh
-python3 latency_benchmark/<script_name>
+source pytorch_env_310/bin/activate
 ```
 
-### 4. (Optional) Profiling with Nsight Compute to Get Hardware Metrics For Analysis
+#### 2. Verify Platform Readiness
+Before running benchmarks, run the verification script to ensure all dependencies, compilers, and hardware are correctly configured.
 ```sh
-python3 torch_inference.py
-PROFILE_SECTIONS=compute python3 torch_inference.py
-PROFILE_SECTIONS=memory python3 torch_inference.py
-PROFILE_SECTIONS=scheduler python3 torch_inference.py
-PROFILE_SECTIONS=roofline python3 torch_inference.py
+python setup_scripts/verify_platform.py
 ```
+If any checks fail, address the issues before proceeding.
 
-### Optional Steps for Visualizing Nsight Compute Results
-Custom Output File Names:
-File names needs to be adjusted when changing flags in torch_inference.py
+## Running the Benchmarks
 
-Install Nsight Compute Locally and transfer results to host for GUI:
-If needed, download and install Nsight Compute/System on your local machine to analyze the profiling results.
+Once your environment is active (either inside Docker or the local venv):
+
+### 1. Benchmark Inference Latency
+The primary script for benchmarking is `generic_benchmark.py`. You can specify the model and batch sizes.
+
+```sh
+# Run ResNet50 with default batch sizes (1, 2, 4, 8, 16, 32)
+python latency_benchmark/generic_benchmark.py --model resnet50
+
+# Run BERT with custom batch sizes
+python latency_benchmark/generic_benchmark.py --model bert-base-uncased --batch_sizes 1 4 8
+
+# Available models: resnet50, bert-base-uncased, vit, align, lstm
+```
+Results are appended to `results/benchmark_results.csv`.
+
+### 2. Extract Dynamo FX Graph
+To understand what `torch.compile` is doing, you can extract its internal graph representation.
+
+```sh
+python latency_benchmark/dynamo_fxGraph_extraction.py --model resnet50
+```
+The output is saved to `results/resnet50_dynamo_graph.txt`.
+
+### 3. (Optional) Profiling with Nsight Compute
+For deep hardware analysis, use `ncu` to profile the execution. (Further details to be added).
+
+```sh
+# Example of profiling with Nsight Compute
+ncu -o my_profile_report --set full python latency_benchmark/generic_benchmark.py --model resnet50 --batch_sizes 1
+```
+```
