@@ -1,0 +1,65 @@
+W0630 15:37:46.939528 856459 torch/_dynamo/variables/tensor.py:913] [0/0] Graph break from `Tensor.item()`, consider setting:
+W0630 15:37:46.939528 856459 torch/_dynamo/variables/tensor.py:913] [0/0]     torch._dynamo.config.capture_scalar_outputs = True
+W0630 15:37:46.939528 856459 torch/_dynamo/variables/tensor.py:913] [0/0] or:
+W0630 15:37:46.939528 856459 torch/_dynamo/variables/tensor.py:913] [0/0]     env TORCHDYNAMO_CAPTURE_SCALAR_OUTPUTS=1
+W0630 15:37:46.939528 856459 torch/_dynamo/variables/tensor.py:913] [0/0] to include these operations in the captured graph.
+W0630 15:37:46.939528 856459 torch/_dynamo/variables/tensor.py:913] [0/0] 
+W0630 15:37:46.939528 856459 torch/_dynamo/variables/tensor.py:913] [0/0] Graph break: from user code at:
+W0630 15:37:46.939528 856459 torch/_dynamo/variables/tensor.py:913] [0/0]   File "/storage/coda1/p-ur2/0/jchen3392/quantized.pytorch/models/resnet_quantized.py", line 141, in forward
+W0630 15:37:46.939528 856459 torch/_dynamo/variables/tensor.py:913] [0/0]     x = self.conv1(x)
+W0630 15:37:46.939528 856459 torch/_dynamo/variables/tensor.py:913] [0/0]   File "/storage/coda1/p-ur2/0/jchen3392/quantized.pytorch/models/modules/quantize.py", line 188, in forward
+W0630 15:37:46.939528 856459 torch/_dynamo/variables/tensor.py:913] [0/0]     qinput = self.quantize_input(input)
+W0630 15:37:46.939528 856459 torch/_dynamo/variables/tensor.py:913] [0/0]   File "/storage/coda1/p-ur2/0/jchen3392/quantized.pytorch/models/modules/quantize.py", line 171, in forward
+W0630 15:37:46.939528 856459 torch/_dynamo/variables/tensor.py:913] [0/0]     return quantize(input, self.num_bits, min_value=float(min_value), max_value=float(max_value), num_chunks=16)
+W0630 15:37:46.939528 856459 torch/_dynamo/variables/tensor.py:913] [0/0] 
+W0630 15:37:46.939528 856459 torch/_dynamo/variables/tensor.py:913] [0/0] 
+W0630 15:38:05.028365 856459 torch/_dynamo/convert_frame.py:964] [9/8] torch._dynamo hit config.recompile_limit (8)
+W0630 15:38:05.028365 856459 torch/_dynamo/convert_frame.py:964] [9/8]    function: 'torch_dynamo_resume_in_forward_at_191' (/storage/coda1/p-ur2/0/jchen3392/quantized.pytorch/models/modules/quantize.py:191)
+W0630 15:38:05.028365 856459 torch/_dynamo/convert_frame.py:964] [9/8]    last reason: 9/7: self.stride == (2, 2)                                  
+W0630 15:38:05.028365 856459 torch/_dynamo/convert_frame.py:964] [9/8] To log all recompilation reasons, use TORCH_LOGS="recompiles".
+W0630 15:38:05.028365 856459 torch/_dynamo/convert_frame.py:964] [9/8] To diagnose recompilation issues, see https://pytorch.org/docs/main/torch.compiler_troubleshooting.html.
+W0630 15:38:08.865719 856459 torch/_dynamo/convert_frame.py:964] [7/8] torch._dynamo hit config.recompile_limit (8)
+W0630 15:38:08.865719 856459 torch/_dynamo/convert_frame.py:964] [7/8]    function: 'torch_dynamo_resume_in_forward_at_188' (/storage/coda1/p-ur2/0/jchen3392/quantized.pytorch/models/modules/quantize.py:188)
+W0630 15:38:08.865719 856459 torch/_dynamo/convert_frame.py:964] [7/8]    last reason: 7/6: tensor 'self._parameters['weight']' size mismatch at index 0. expected 256, actual 512. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+W0630 15:38:08.865719 856459 torch/_dynamo/convert_frame.py:964] [7/8] To log all recompilation reasons, use TORCH_LOGS="recompiles".
+W0630 15:38:08.865719 856459 torch/_dynamo/convert_frame.py:964] [7/8] To diagnose recompilation issues, see https://pytorch.org/docs/main/torch.compiler_troubleshooting.html.
+W0630 15:38:45.877383 856459 torch/_dynamo/convert_frame.py:964] [16/8] torch._dynamo hit config.recompile_limit (8)
+W0630 15:38:45.877383 856459 torch/_dynamo/convert_frame.py:964] [16/8]    function: 'torch_dynamo_resume_in_forward_at_296' (/storage/coda1/p-ur2/0/jchen3392/quantized.pytorch/models/modules/quantize.py:296)
+W0630 15:38:45.877383 856459 torch/_dynamo/convert_frame.py:964] [16/8]    last reason: 16/4: tensor 'out' size mismatch at index 1. expected 256, actual 1024
+W0630 15:38:45.877383 856459 torch/_dynamo/convert_frame.py:964] [16/8] To log all recompilation reasons, use TORCH_LOGS="recompiles".
+W0630 15:38:45.877383 856459 torch/_dynamo/convert_frame.py:964] [16/8] To diagnose recompilation issues, see https://pytorch.org/docs/main/torch.compiler_troubleshooting.html.
+W0630 15:42:20.792828 856459 torch/_dynamo/convert_frame.py:964] [31/8] torch._dynamo hit config.recompile_limit (8)
+W0630 15:42:20.792828 856459 torch/_dynamo/convert_frame.py:964] [31/8]    function: 'torch_dynamo_resume_in_forward_at_223' (/storage/coda1/p-ur2/0/jchen3392/quantized.pytorch/models/modules/quantize.py:223)
+W0630 15:42:20.792828 856459 torch/_dynamo/convert_frame.py:964] [31/8]    last reason: 31/7: ___as_tensor(___stack4).item() == 0.02209707908332348  # (unknown source ___as_tensor(___stack4).item(), please file a bug)
+W0630 15:42:20.792828 856459 torch/_dynamo/convert_frame.py:964] [31/8] To log all recompilation reasons, use TORCH_LOGS="recompiles".
+W0630 15:42:20.792828 856459 torch/_dynamo/convert_frame.py:964] [31/8] To diagnose recompilation issues, see https://pytorch.org/docs/main/torch.compiler_troubleshooting.html.
+W0630 15:43:20.786002 856459 torch/_dynamo/convert_frame.py:964] [15/8] torch._dynamo hit config.recompile_limit (8)
+W0630 15:43:20.786002 856459 torch/_dynamo/convert_frame.py:964] [15/8]    function: 'torch_dynamo_resume_in_forward_at_296' (/storage/coda1/p-ur2/0/jchen3392/quantized.pytorch/models/modules/quantize.py:296)
+W0630 15:43:20.786002 856459 torch/_dynamo/convert_frame.py:964] [15/8]    last reason: 15/7: tensor 'self._parameters['weight']' size mismatch at index 0. expected 8, actual 16. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+W0630 15:43:20.786002 856459 torch/_dynamo/convert_frame.py:964] [15/8] To log all recompilation reasons, use TORCH_LOGS="recompiles".
+W0630 15:43:20.786002 856459 torch/_dynamo/convert_frame.py:964] [15/8] To diagnose recompilation issues, see https://pytorch.org/docs/main/torch.compiler_troubleshooting.html.
+W0630 15:43:20.807399 856459 torch/_dynamo/convert_frame.py:964] [12/8] torch._dynamo hit config.recompile_limit (8)
+W0630 15:43:20.807399 856459 torch/_dynamo/convert_frame.py:964] [12/8]    function: 'torch_dynamo_resume_in_forward_at_265' (/storage/coda1/p-ur2/0/jchen3392/quantized.pytorch/models/modules/quantize.py:265)
+W0630 15:43:20.807399 856459 torch/_dynamo/convert_frame.py:964] [12/8]    last reason: 12/7: tensor 'self._buffers['running_var']' size mismatch at index 0. expected 16, actual 32
+W0630 15:43:20.807399 856459 torch/_dynamo/convert_frame.py:964] [12/8] To log all recompilation reasons, use TORCH_LOGS="recompiles".
+W0630 15:43:20.807399 856459 torch/_dynamo/convert_frame.py:964] [12/8] To diagnose recompilation issues, see https://pytorch.org/docs/main/torch.compiler_troubleshooting.html.
+W0630 15:48:37.202332 856459 torch/_dynamo/convert_frame.py:964] [45/8] torch._dynamo hit config.recompile_limit (8)
+W0630 15:48:37.202332 856459 torch/_dynamo/convert_frame.py:964] [45/8]    function: 'torch_dynamo_resume_in_forward_at_48' (/storage/coda1/p-ur2/0/jchen3392/quantized.pytorch/models/resnet_quantized_float_bn.py:48)
+W0630 15:48:37.202332 856459 torch/_dynamo/convert_frame.py:964] [45/8]    last reason: 45/7: tensor 'self._modules['bn2']._buffers['running_var']' size mismatch at index 0. expected 64, actual 128
+W0630 15:48:37.202332 856459 torch/_dynamo/convert_frame.py:964] [45/8] To log all recompilation reasons, use TORCH_LOGS="recompiles".
+W0630 15:48:37.202332 856459 torch/_dynamo/convert_frame.py:964] [45/8] To diagnose recompilation issues, see https://pytorch.org/docs/main/torch.compiler_troubleshooting.html.
+W0630 15:48:52.551565 856459 torch/_dynamo/convert_frame.py:964] [55/8] torch._dynamo hit config.recompile_limit (8)
+W0630 15:48:52.551565 856459 torch/_dynamo/convert_frame.py:964] [55/8]    function: 'torch_dynamo_resume_in_forward_at_90' (/storage/coda1/p-ur2/0/jchen3392/quantized.pytorch/models/resnet_quantized_float_bn.py:90)
+W0630 15:48:52.551565 856459 torch/_dynamo/convert_frame.py:964] [55/8]    last reason: 55/7: tensor 'self._modules['bn3']._buffers['running_var']' size mismatch at index 0. expected 2048, actual 256
+W0630 15:48:52.551565 856459 torch/_dynamo/convert_frame.py:964] [55/8] To log all recompilation reasons, use TORCH_LOGS="recompiles".
+W0630 15:48:52.551565 856459 torch/_dynamo/convert_frame.py:964] [55/8] To diagnose recompilation issues, see https://pytorch.org/docs/main/torch.compiler_troubleshooting.html.
+W0630 15:48:53.119072 856459 torch/_dynamo/convert_frame.py:964] [53/8] torch._dynamo hit config.recompile_limit (8)
+W0630 15:48:53.119072 856459 torch/_dynamo/convert_frame.py:964] [53/8]    function: 'torch_dynamo_resume_in_forward_at_82' (/storage/coda1/p-ur2/0/jchen3392/quantized.pytorch/models/resnet_quantized_float_bn.py:82)
+W0630 15:48:53.119072 856459 torch/_dynamo/convert_frame.py:964] [53/8]    last reason: 53/7: tensor 'self._modules['bn1']._buffers['running_var']' size mismatch at index 0. expected 256, actual 512
+W0630 15:48:53.119072 856459 torch/_dynamo/convert_frame.py:964] [53/8] To log all recompilation reasons, use TORCH_LOGS="recompiles".
+W0630 15:48:53.119072 856459 torch/_dynamo/convert_frame.py:964] [53/8] To diagnose recompilation issues, see https://pytorch.org/docs/main/torch.compiler_troubleshooting.html.
+W0630 15:50:35.287298 856459 torch/_dynamo/convert_frame.py:964] [29/8] torch._dynamo hit config.recompile_limit (8)
+W0630 15:50:35.287298 856459 torch/_dynamo/convert_frame.py:964] [29/8]    function: 'torch_dynamo_resume_in_forward_at_220' (/storage/coda1/p-ur2/0/jchen3392/quantized.pytorch/models/modules/quantize.py:220)
+W0630 15:50:35.287298 856459 torch/_dynamo/convert_frame.py:964] [29/8]    last reason: 29/5: tensor 'self._parameters['weight']' size mismatch at index 1. expected 512, actual 1024. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+W0630 15:50:35.287298 856459 torch/_dynamo/convert_frame.py:964] [29/8] To log all recompilation reasons, use TORCH_LOGS="recompiles".
+W0630 15:50:35.287298 856459 torch/_dynamo/convert_frame.py:964] [29/8] To diagnose recompilation issues, see https://pytorch.org/docs/main/torch.compiler_troubleshooting.html.
