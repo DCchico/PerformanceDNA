@@ -1,0 +1,25 @@
+# Nsight Compute reports (large files)
+*.ncu-rep
+*.nsys-rep
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+pytorch_env_310/
+pytorch_env_new/
+
+# Results and data files (optional - uncomment if you don't want to track results)
+# results/*.csv
+# results/*.png
+# results/*.pdf
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db 
